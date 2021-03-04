@@ -23,6 +23,7 @@ import Datable from '../plugins/datable';
 import Parameterizable from '../plugins/parameterizable';
 import Anchorable from '../plugins/anchorable';
 import Objectable from '../plugins/objectable';
+import Instanceable from '../plugins/instanceable';
 
 context.page = page;
 context.router = router;
@@ -31,6 +32,7 @@ context.worker = worker;
 context.params = params;
 context.project = project;
 context.environment = window.environment;
+context.instances = {};
 
 client.memory = deserialize(JSON.stringify(window.instances));
 
@@ -38,6 +40,7 @@ const scope = client;
 scope.context = context;
 
 client.plugins = [
+  new Instanceable({scope}),
   new Objectable({scope}),
   new Parameterizable({scope}),
   new Anchorable({scope}),
@@ -64,6 +67,7 @@ export default class Nullstack {
     client.virtualDom = await generateTree(client.initializer(), scope);
     context.environment = environment;
     scope.plugins = [
+      new Instanceable({scope}),
       new Objectable({scope}),
       new Parameterizable({scope}),
       new Anchorable({scope}),
@@ -85,13 +89,17 @@ export default class Nullstack {
     hydrated: false
   }
 
-  constructor() {
-    const methods = getProxyableMethods(this);
-    const proxy = new Proxy(this, instanceProxyHandler);
-    for(const method of methods) {
-      this[method] = this[method].bind(proxy);
+  constructor(scope) {
+    const name = this.constructor.name;
+    if (!scope.context.instances[name]) {
+      const methods = getProxyableMethods(this);
+      const proxy = new Proxy(this, instanceProxyHandler);
+      for(const method of methods) {
+        this[method] = this[method].bind(proxy);
+      }
+      return proxy;
     }
-    return proxy;
+    return scope.context.instances[name];
   }
 
   render() {

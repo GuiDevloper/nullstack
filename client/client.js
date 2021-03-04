@@ -11,6 +11,7 @@ import Datable from '../plugins/datable';
 import Parameterizable from '../plugins/parameterizable';
 import Anchorable from '../plugins/anchorable';
 import Objectable from '../plugins/objectable';
+import Instanceable from '../plugins/instanceable';
 
 const client = {};
 
@@ -37,6 +38,7 @@ client.update = async function() {
       const scope = client;
       scope.context = context;
       scope.plugins = [
+        new Instanceable({scope}),
         new Objectable({scope}),
         new Parameterizable({scope}),
         new Anchorable({scope}),

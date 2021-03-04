@@ -22,6 +22,7 @@ context.environment = environment;
 context.settings = settings;
 context.secrets = secrets;
 context.worker = worker;
+context.instances = {};
 
 class Nullstack {
 
@@ -53,12 +54,17 @@ class Nullstack {
   constructor(scope) {
     this._request = () => scope.request;
     this._response = () => scope.response;
-    const methods = getProxyableMethods(this);
-    const proxy = new Proxy(this, instanceProxyHandler);
-    for(const method of methods) {
-      this[method] = this[method].bind(proxy);
+    const name = this.constructor.name;
+    if (!scope.context.instances[name]) {
+      const methods = getProxyableMethods(this);
+      const proxy = new Proxy(this, instanceProxyHandler);
+      for(const method of methods) {
+        this[method] = this[method].bind(proxy);
+      }
+      return proxy;
     }
-    return proxy;
+    context.instances[name] = scope.context.instances[name];
+    return scope.context.instances[name];
   }
 
   toJSON() {

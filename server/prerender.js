@@ -14,6 +14,7 @@ import Routable from '../plugins/routable';
 import Bindable from '../plugins/bindable';
 import Datable from '../plugins/datable';
 import Parameterizable from '../plugins/parameterizable';
+import Instanceable from '../plugins/instanceable';
 
 export async function prerender(request, response) {
   const context = {};
@@ -25,6 +26,7 @@ export async function prerender(request, response) {
   context.router = new Router(request, response);
   const online = context.router.url !== `/offline-${environment.key}`;
   context.worker = {...worker, online, responsive: online};
+  context.instances = {};
   const scope = {};
   scope.instances = {};
   scope.segments = context.params;
@@ -36,6 +38,7 @@ export async function prerender(request, response) {
   scope.generateContext = generateContext(context);
 
   scope.plugins = [
+    new Instanceable({scope}),
     new Parameterizable({scope}),
     new Routable({scope}),
     new Datable({scope}),
@@ -61,6 +64,7 @@ export async function prerender(request, response) {
       }
       scope.head = '';
       scope.plugins = [
+        new Instanceable({scope}),
         new Parameterizable({scope}),
         new Routable({scope}),
         new Datable({scope}),
