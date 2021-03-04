@@ -28,6 +28,12 @@ import './Application.css';
 
 class Application extends Nullstack {
 
+  isTrue = true;
+
+  async changeInstance({ instances }) {
+    await instances.RenderableComponent.storeData();
+  }
+
   static async start(context) {
     ContextProject.start(context);
     ContextSecrets.start(context);
@@ -40,6 +46,9 @@ class Application extends Nullstack {
     return (
       <main>
         <h1> {project.name} </h1>
+        <button onclick={this.changeInstance}>
+          isTrue na Application: {this.isTrue.toString()}
+        </button>
         {page.status !== 200 && <div route="*" data-page-status={page.status}></div>}
         <div route="/">
           <a href={`/offline-${environment.key}`}> offline </a>

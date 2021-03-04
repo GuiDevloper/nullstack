@@ -2,6 +2,24 @@ import Nullstack from 'nullstack';
 
 class RenderableComponent extends Nullstack {
 
+  title = 'Nullstack';
+  static serverTitle = 'Nullstack ';
+  
+  static async getData({ instances }) {
+    instances.Application.isTrue = !instances.Application.isTrue;
+    this.serverTitle += this.serverTitle;
+    return [
+      this.serverTitle,
+      instances.Application.isTrue
+    ];
+  }
+  
+  async storeData({ instances }) {
+    const data = await this.getData();
+    this.title = data[0];
+    instances.Application.isTrue = data[1];
+  }
+
   renderNestedInnerComponent() {
     return <div data-nested />
   }
@@ -44,6 +62,7 @@ class RenderableComponent extends Nullstack {
           {list.map((item) => <li> {item} </li>)}
         </ul>
         <div html={html} />
+        <div> Title no RenderableComponent: {this.title} </div>
         <head>
           <link rel="preload" href="https://nullstack.app" as="fetch" crossorigin />
         </head>
