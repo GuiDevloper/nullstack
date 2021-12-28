@@ -21,6 +21,13 @@ function cacheFactory(args, folder, name) {
   }
 }
 
+function terserMinimizer(file, _sourceMap) {
+  return require('@swc/core').minify(file, {
+    keepClassnames: true,
+    keepFnames: true
+  })
+}
+
 const babel = {
   test: /\.js$/,
   resolve: {
@@ -122,10 +129,7 @@ function server(env, argv) {
       minimize: minimize,
       minimizer: [
         new TerserPlugin({
-          terserOptions: {
-            //keep_classnames: true,
-            keep_fnames: true
-          },
+          minify: terserMinimizer,
           // workaround: disable parallel to allow caching server
           parallel: argv.cache ? false : require('os').cpus().length - 1
         })
@@ -240,10 +244,7 @@ function client(env, argv) {
       minimize: minimize,
       minimizer: [
         new TerserPlugin({
-          terserOptions: {
-            //keep_classnames: true,
-            keep_fnames: true
-          }
+          minify: terserMinimizer
         })
       ]
     },

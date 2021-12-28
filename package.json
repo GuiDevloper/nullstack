@@ -24,6 +24,7 @@
     "@babel/plugin-transform-react-jsx": "^7.8.3",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-react": "^7.0.0",
+    "@swc/core": "^1.2.123",
     "babel-loader": "^8.0.5",
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "body-parser": "^1.19.0",
