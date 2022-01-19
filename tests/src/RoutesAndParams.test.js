@@ -265,5 +265,3 @@ describe('RoutesAndParams /routes-and-params?previous=true', () => {
   });
 
 });
-
-afterAll(require('./teardown'));

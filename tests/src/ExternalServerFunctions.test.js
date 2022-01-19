@@ -30,5 +30,3 @@ describe('ExtermalServerFunctions', () => {
   });
 
 });
-
-afterAll(require('./teardown'));

@@ -56,5 +56,3 @@ describe('ServerFunctions', () => {
   });
 
 });
-
-afterAll(require('./teardown'));
