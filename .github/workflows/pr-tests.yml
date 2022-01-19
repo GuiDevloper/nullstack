@@ -33,12 +33,10 @@ jobs:
           path: '**/node_modules'
           key: node_modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install and link dependencies
-        run: npm install
-        run: npm link
-        run: cd tests
-        run: npm link nullstack
-        run: npm install
+      - run: npm install
+      - run: npm link
+      - run: cd tests
+      - run: npm link nullstack
+      - run: npm install
 
-      - name: Run tests
-        run: npm test
+      - run: npm test
