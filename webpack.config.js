@@ -267,10 +267,6 @@ function client(env, argv) {
         },
         {
           test: /.(njs|nts)$/,
-          loader: path.resolve('./node_modules/nullstack/loaders/inject-nullstack.js'),
-        },
-        {
-          test: /.(njs|nts)$/,
           loader: path.resolve('./node_modules/nullstack/loaders/remove-static-from-client.js'),
         },
         {
