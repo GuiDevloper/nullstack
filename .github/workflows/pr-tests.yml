@@ -26,13 +26,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # cache the dependencies from any node_modules directory
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: node_modules-${{ hashFiles('**/package-lock.json') }}
-
       - name: Install and link main deps
         run: |
           npm install
