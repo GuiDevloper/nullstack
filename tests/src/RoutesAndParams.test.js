@@ -1,10 +1,3 @@
-const puppeteer = require('puppeteer');
-
-let browser;
-
-beforeAll(async () => {
-  browser = await puppeteer.launch();
-});
 
 describe('RoutesAndParams /routes-and-params', () => {
 
@@ -273,6 +266,4 @@ describe('RoutesAndParams /routes-and-params?previous=true', () => {
 
 });
 
-afterAll(async () => {
-  browser.close();
-});
+afterAll(require('./teardown'));

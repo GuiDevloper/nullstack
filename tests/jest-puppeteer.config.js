@@ -6,7 +6,8 @@ const baseOptions = {
     command: 'npm run start',
     port: 6969,
     launchTimeout: 25000
-  }
+  },
+  browserContext: 'incognito'
 }
 
 const ciPipelineOptions = {
@@ -21,7 +22,7 @@ const ciPipelineOptions = {
       '--disable-gpu'
     ]
   },
-  server: baseOptions.server
+  ...baseOptions
 }
 
 module.exports = ci ? ciPipelineOptions : baseOptions;

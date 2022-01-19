@@ -1,10 +1,4 @@
-const puppeteer = require('puppeteer');
-
-let browser;
-let page;
-
 beforeAll(async () => {
-  browser = await puppeteer.launch();
   page = await browser.newPage();
   await page.goto('http://localhost:6969/server-functions');
 });
@@ -63,6 +57,4 @@ describe('ServerFunctions', () => {
 
 });
 
-afterAll(async () => {
-  browser.close();
-});
+afterAll(require('./teardown'));
