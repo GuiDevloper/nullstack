@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container: lironavon/docker-puppeteer-container:14.16.0
     env:
       CI: true
@@ -21,6 +21,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      # cache the dependencies from any node_modules directory
+      - name: cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: node_modules-${{ hashFiles('**/package-lock.json') }}
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
