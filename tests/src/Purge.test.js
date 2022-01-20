@@ -7,7 +7,7 @@ let css;
 const unused = '.unused'
 
 beforeAll(async () => {
-  // await exec('npm run build');
+  await exec('npm run build');
   css = readFileSync('.production/client.css', 'utf-8')
 });
 

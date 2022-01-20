@@ -40,9 +40,12 @@ jobs:
           npm install
           npm link
 
-      - name: Install and run at tests folder
+      - name: Install deps at tests folder
         working-directory: ./tests
         run: |
           npm link nullstack
           npm install
-          npm test
+
+      - name: Run tests
+        working-directory: ./tests
+        run: npm test
