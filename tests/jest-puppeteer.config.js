@@ -1,5 +1,5 @@
 // get environment variable
-const ci = Boolean(process.env.CI || false);
+const CI = Boolean(process.env.CI || false);
 
 const baseOptions = {
   server: {
@@ -25,4 +25,4 @@ const ciPipelineOptions = {
   ...baseOptions
 }
 
-module.exports = ci ? ciPipelineOptions : baseOptions;
+module.exports = CI ? ciPipelineOptions : baseOptions;

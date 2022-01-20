@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       # cache the dependencies from any node_modules directory
-      - name: cache dependencies
+      - name: Cache dependencies
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
