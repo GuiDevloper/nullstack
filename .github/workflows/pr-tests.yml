@@ -25,7 +25,9 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: |
+            ./node_modules
+            ./tests/node_modules
           key: node_modules-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
 
       - name: Use Node.js ${{ matrix.node-version }}
