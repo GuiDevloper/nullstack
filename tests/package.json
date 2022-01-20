@@ -14,7 +14,7 @@
   "scripts": {
     "start": "npx nullstack start --input=./tests --port=6969",
     "build": "npx nullstack build --input=./tests --mode=ssr",
-    "test": "jest ServerFunctions Purge",
+    "test": "npm run build && jest Routes ServerFunctions Purge",
     "script": "node src/scripts/run.js"
   },
   "dependencies": {
