@@ -11,9 +11,13 @@ function match(node) {
 function transform({node, router}) {
   if(!match(node)) return;
   const originalEvent = node.attributes.onclick;
+  node.attributes.default = true;
   node.attributes.onclick = ({event}) => {
-    event.preventDefault();
-    router.url = node.attributes.href;
+    if(!event.ctrlKey && !event.shiftKey && !event.altKey) {
+      event.preventDefault();
+      router.url = node.attributes.href;
+    }
+
     if(originalEvent) {
       setTimeout(() => {
         originalEvent({...node.attributes, event});
