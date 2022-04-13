@@ -29,21 +29,23 @@ function terserMinimizer(file, _sourceMap) {
   })
 }
 
-const babel = {
+const swc = {
   test: /\.js$/,
   resolve: {
     extensions: ['.njs', '.js', '.nts', '.ts']
   },
   use: {
-    loader: 'babel-loader',
+    loader: require.resolve('swc-loader'),
     options: {
-      "presets": [
-        ["@babel/preset-env", { "targets": { node: "10" } }]
-      ],
-      "plugins": [
-        "@babel/plugin-proposal-export-default-from",
-        "@babel/plugin-proposal-class-properties"
-      ]
+      jsc: {
+        parser: {
+          syntax: "ecmascript",
+          exportDefaultFrom: true
+        },
+      },
+      env: {
+        targets: { node: "10" }
+      },
     }
   }
 };
@@ -54,21 +56,25 @@ const nullstackJavascript = {
     extensions: ['.njs', '.js', '.nts', '.ts']
   },
   use: {
-    loader: 'babel-loader',
+    loader: require.resolve('swc-loader'),
     options: {
-      "presets": [
-        ["@babel/preset-env", { "targets": { node: "10" } }],
-        "@babel/preset-react",
-      ],
-      "plugins": [
-        "@babel/plugin-proposal-export-default-from",
-        "@babel/plugin-proposal-class-properties",
-        ["@babel/plugin-transform-react-jsx", {
-          "pragma": "Nullstack.element",
-          "pragmaFrag": "Nullstack.fragment",
-          "throwIfNamespace": false
-        }]
-      ]
+      jsc: {
+        parser: {
+          syntax: "ecmascript",
+          exportDefaultFrom: true,
+          jsx: true,
+        },
+        transform: {
+          react: {
+            pragma: "Nullstack.element",
+            pragmaFrag: "Nullstack.fragment",
+            throwIfNamespace: true,
+          }
+        },
+      },
+      env: {
+        targets: { node: "10" }
+      },
     }
   }
 };
@@ -79,20 +85,25 @@ const nullstackTypescript = {
     extensions: ['.njs', '.js', '.nts', '.ts']
   },
   use: {
-    loader: 'babel-loader',
+    loader: require.resolve('swc-loader'),
     options: {
-      "presets": [
-        ["@babel/preset-env", { "targets": { node: "10" } }],
-        "@babel/preset-react",
-      ],
-      "plugins": [
-        ["@babel/plugin-transform-typescript", { isTSX: true, allExtensions: true, tsxPragma: "Nullstack.element", tsxPragmaFrag: "Nullstack.fragment" }],
-        ["@babel/plugin-transform-react-jsx", {
-          "pragma": "Nullstack.element",
-          "pragmaFrag": "Nullstack.fragment",
-          "throwIfNamespace": false
-        }]
-      ]
+      jsc: {
+        parser: {
+          syntax: "typescript",
+          exportDefaultFrom: true,
+          tsx: true,
+        },
+        transform: {
+          react: {
+            pragma: "Nullstack.element",
+            pragmaFrag: "Nullstack.fragment",
+            throwIfNamespace: true,
+          }
+        },
+      },
+      env: {
+        targets: { node: "10" }
+      },
     }
   }
 };
@@ -167,7 +178,7 @@ function server(env, argv) {
             ]
           }
         },
-        babel,
+        swc,
         nullstackJavascript,
         {
           test: /.(njs|nts)$/,
@@ -264,7 +275,7 @@ function client(env, argv) {
             ]
           }
         },
-        babel,
+        swc,
         nullstackJavascript,
         {
           test: /.(njs|nts)$/,
