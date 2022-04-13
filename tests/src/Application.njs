@@ -1,4 +1,5 @@
 import Nullstack from 'nullstack';
+import AnchorModifiers from './AnchorModifiers';
 import './Application.css';
 import ChildComponent from './ChildComponent';
 import ComponentTernary from './ComponentTernary';
@@ -26,6 +27,7 @@ import NestedProxy from './NestedProxy';
 import ParentComponent from './ParentComponent';
 import PersistentComponent from './PersistentComponent';
 import PluginAttributes from './PluginAttributes';
+import Polyfill from './Polyfill';
 import PublicServerFunctions from './PublicServerFunctions.njs';
 import PureComponents from './PureComponents';
 import Purge from './Purge';
@@ -107,6 +109,8 @@ class Application extends Nullstack {
         <UndefinedNodes route="/undefined-nodes" />
         <Purge route="/purge" />
         <ComponentTernary route="/component-ternary" />
+        <AnchorModifiers route="/anchor-modifiers" />
+        <Polyfill route="/polyfill" />
         <ErrorPage route="*" />
       </main>
     )
