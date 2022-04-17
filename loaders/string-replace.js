@@ -1,0 +1,17 @@
+// Originally published at https://npmjs.com/package/string-replace-loader
+
+module.exports = function(source, map) {
+  this.cacheable()
+
+  const optionsArray = this.getOptions().multiple
+  let newSource = source
+
+  for (const options of optionsArray) {
+    newSource = newSource.replace(
+      new RegExp(options.search, options.search.flags || options.flags || ''),
+      options.replace
+    )
+  }
+
+  this.callback(null, newSource, map)
+}
