@@ -27,7 +27,6 @@ import NestedProxy from './NestedProxy';
 import ParentComponent from './ParentComponent';
 import PersistentComponent from './PersistentComponent';
 import PluginAttributes from './PluginAttributes';
-import Polyfill from './Polyfill';
 import PublicServerFunctions from './PublicServerFunctions.njs';
 import PureComponents from './PureComponents';
 import WebpackCustomPlugin from './WebpackCustomPlugin';
@@ -45,6 +44,7 @@ import UnderscoredAttributes from './UnderscoredAttributes';
 import Vunerability from './Vunerability';
 import WindowDependency from './WindowDependency';
 import WorkerVerbs from './WorkerVerbs';
+import MetatagState from './MetatagState';
 
 class Application extends Nullstack {
 
@@ -110,7 +110,7 @@ class Application extends Nullstack {
         <WebpackCustomPlugin route="/webpack-custom-plugin" />
         <ComponentTernary route="/component-ternary" />
         <AnchorModifiers route="/anchor-modifiers" />
-        <Polyfill route="/polyfill" />
+        <MetatagState route="/metatag-state" />
         <ErrorPage route="*" />
       </main>
     )

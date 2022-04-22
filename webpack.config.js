@@ -4,7 +4,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const crypto = require("crypto");
 const { readdirSync } = require('fs');
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
 
 const buildKey = crypto.randomBytes(20).toString('hex');
 
@@ -132,7 +131,7 @@ function server(env, argv) {
       nodeArgs: ['--enable-source-maps'],
       quiet: true
     })
-  ]) : undefined;
+  ]) : [];
   return {
     mode: argv.environment,
     entry: './server.js',
@@ -251,9 +250,6 @@ function client(env, argv) {
   const plugins = [
     new MiniCssExtractPlugin({
       filename: "client.css"
-    }),
-    new NodePolyfillPlugin({
-      excludeAliases: ["console"]
     })
   ]
   return {
