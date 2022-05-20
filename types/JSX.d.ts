@@ -1097,9 +1097,9 @@ export namespace N {
     }
 
     interface MetaHTMLAttributes<T> extends HTMLAttributes<T> {
-        charSet?: string | undefined;
+        charset?: string | undefined;
         content?: string | undefined;
-        httpEquiv?: string | undefined;
+        'http-equiv'?: string | undefined;
         name?: string | undefined;
         media?: string | undefined;
     }
@@ -1764,6 +1764,7 @@ export namespace N {
 
 declare global {
     namespace JSX {
+        // @ts-ignore
         type Element = N.NullstackNode;
 
         interface IntrinsicAttributes extends N.NullstackAttributes { }
@@ -1879,6 +1880,10 @@ declare global {
             th: N.DetailedHTMLProps<N.ThHTMLAttributes<HTMLTableHeaderCellElement>, HTMLTableHeaderCellElement>;
             thead: N.DetailedHTMLProps<N.HTMLAttributes<HTMLTableSectionElement>, HTMLTableSectionElement>;
             time: N.DetailedHTMLProps<N.TimeHTMLAttributes<HTMLTimeElement>, HTMLTimeElement>;
+            /**
+             * @deprecated
+             * Nullstack already controls - Use [Context.Page](https://nullstack.app/context-page) instead.
+             */
             title: N.DetailedHTMLProps<N.HTMLAttributes<HTMLTitleElement>, HTMLTitleElement>;
             tr: N.DetailedHTMLProps<N.HTMLAttributes<HTMLTableRowElement>, HTMLTableRowElement>;
             track: N.DetailedHTMLProps<N.TrackHTMLAttributes<HTMLTrackElement>, HTMLTrackElement>;
