@@ -15,8 +15,9 @@ function server(options) {
   if (options.environment === 'production') {
     return options.entry
   }
+  const webpackHot = `${require.resolve('webpack/hot/poll')}?100`
   return [
-    'webpack/hot/poll?100',
+    webpackHot,
     path.posix.join(options.configFolder, 'shared', 'accept.js'),
     options.entry
   ]
