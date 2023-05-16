@@ -23,7 +23,7 @@ export default function invoke(name, hash) {
     const options = {
       headers: worker.headers,
       mode: 'cors',
-      cache: 'no-cache',
+      // cache: 'no-cache',
       credentials: 'same-origin',
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
