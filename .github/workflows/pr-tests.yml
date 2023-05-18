@@ -30,6 +30,7 @@ jobs:
         with:
           path: |
             **/node_modules
+            **/pnpm-lock.yaml
           key: node_modules-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
 
       - name: Use Node.js ${{ matrix.node-version }}
@@ -37,7 +38,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-          cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: Install and link main deps
         run: |
