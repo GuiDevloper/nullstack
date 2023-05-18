@@ -4,7 +4,7 @@ name: Nullstack Tests
 
 on:
   pull_request:
-    branches: [ master, next ]
+    branches: [ master, next, test-pnpm-ci ]
 
 jobs:
   build:
@@ -21,31 +21,35 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       # cache the dependencies from any node_modules directory
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
           path: |
             **/node_modules
-            **/package-lock.json
           key: node_modules-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+          cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: Install and link main deps
         run: |
-          npm install
-          npm link
+          pnpm install
+          pnpm link --global
 
       - name: Install deps at tests folder
         working-directory: ./tests
         run: |
-          npm link nullstack
-          npm install
+          pnpm link nullstack --global
+          pnpm install
 
       - name: Run tests
         working-directory: ./tests
-        run: npm test
+        run: pnpm test
