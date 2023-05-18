@@ -14,4 +14,4 @@ class NestedFolder extends Nullstack {
 
 }
 
-export default NestedFolder
+export default NestedFolder;
