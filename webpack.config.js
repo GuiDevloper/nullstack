@@ -54,4 +54,6 @@ function client(_env, argv) {
   return config('client', argv)
 }
 
-module.exports = [server, client]
+const useBabel = require('./nullstack-adapt-babel')
+
+module.exports = useBabel([server, client])
