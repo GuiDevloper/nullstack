@@ -6,7 +6,45 @@ function normalize(child) {
   return child ?? false
 }
 
+let errors = {}
+
+/**
+ * 
+ * @param {any} type Type of the node
+ * @param {{__source: {
+ *  fileName: string,
+ *  lineNumber: number,
+ *  columnNumber: number,
+ * }}} props 
+ * @param  {...any} children 
+ * @returns 
+ */
 export default function element(type, props, ...children) {
+  if (type === undefined) {
+    const isProd = !window.document
+    if (isProd) {
+      console.error(`
+ 🚨 An undefined node exist on your application!
+ 🚨 Run it on development mode to get the location!`)
+      process.exit(1)
+    }
+    const { fileName, lineNumber, columnNumber } = props.__source
+    const msgError = `Undefined node at ${fileName}:${lineNumber}:${columnNumber}`
+    if (!errors[msgError]) {
+      errors[msgError] = 0
+    }
+    ++errors[msgError]
+    if (errors[msgError] > 2) {
+      console.error(msgError)
+    }
+    return {
+      type: 'p',
+      attributes: {
+        style: 'background:#171717; color:#f44336; padding:10px;',
+      },
+      children: msgError
+    }
+  }
   children = seed.concat(...children).map(normalize)
   if (type === 'textarea') {
     children = [children.join('')]
