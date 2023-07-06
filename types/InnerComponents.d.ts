@@ -10,14 +10,16 @@ type RemoveContext<Params extends Record<string, any>, Prop> =
     : Prop
   : 'never'
 
-type ComponentProps<Params> = {
+type ComponentProps<Params extends Record<string, any>> = {
   [Prop in keyof Params as RemoveContext<Params, Prop>]: Params[Prop]
 }
 
 type GetMethod<Class extends Record<string, any>, MethodName> =
   MethodName extends string
   ? NullstackFunctionalComponent<
-      ComponentProps<Parameters<Class[MethodName]>[0]>
+      Parameters<Class[MethodName]>[0] extends Record<string, any>
+      ? ComponentProps<Parameters<Class[MethodName]>[0]>
+      : Record<string, any>
     >
   : never
 
