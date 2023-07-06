@@ -72,7 +72,7 @@ type DetailedHTMLFactory<P, T = any> = P
 export interface SVGFactory {}
 
 export type NullstackFragment = NullstackNode[]
-export type NullstackNode = NullstackFragment | string | number | boolean | null | undefined
+export type NullstackNode = NullstackFragment | string | number | boolean | null
 
 //
 // Event System
