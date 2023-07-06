@@ -19,6 +19,7 @@ export * from './ServerContext'
 export * from './Settings'
 export * from './Worker'
 export * from './JSX'
+export * from './InnerComponents'
 
 /**
  * Functional component
