@@ -1,4 +1,4 @@
-import {
+import Nullstack, {
   NullstackFunctionalComponent,
   NullstackClientContext
 } from './index'
@@ -23,13 +23,15 @@ type GetMethod<Class extends Record<string, any>, MethodName> =
     >
   : never
 
-type GetName<Property> =
+type GetName<Class extends Record<string, any>, Property> =
   Property extends `render` ? never :
   Property extends `render${infer Name}`
-  ? (Property extends `render${Capitalize<Name>}` ? Name : never)
+  ? Property extends `render${Capitalize<Name>}`
+    ? (Class[Property] extends Nullstack['render'] ? Name : never)
+    : never
   : never
 
 export type NullstackInners<Class extends Record<string, any>> = {
-  [Property in keyof Class as GetName<Property>]:
+  [Property in keyof Class as GetName<Class, Property>]:
     GetMethod<Class, Property>
 }
