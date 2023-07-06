@@ -106,7 +106,7 @@ interface BaseNullstackClientContext<TProps = unknown> {
    *
    * @see https://nullstack.app/two-way-bindings#complex-bindable-components
    */
-  bind?: { property?: string | number; object?: any }
+  bind?: { object: any; property: string | number; }
 
   /**
    * Bind value.
