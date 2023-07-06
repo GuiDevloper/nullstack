@@ -3,10 +3,26 @@ import { isClass, isFalse, isFunction, isUndefined } from '../shared/nodes'
 import fragment from './fragment'
 import { transformNodes } from './plugins'
 
-async function generateBranch(siblings, node, depth, scope) {
+async function generateBranch(siblings, node, depth, scope, attributes) {
   transformNodes(scope, node, depth)
 
   if (isUndefined(node)) {
+    const source = attributes?.__source
+    if (source) {
+      const { fileName, lineNumber, columnNumber } = source
+      const msgError = `Undefined node at ${fileName}:${lineNumber}:${columnNumber}`
+      console.error(msgError)
+      siblings.push({
+        type: 'p',
+        attributes: {
+          style: 'background:#171717; color:#f44336; padding:10px;',
+        },
+        children: [{ type: 'text', text: msgError }]
+      })
+      return
+    }
+    return console.warn('Your main component is trying to render an undefined node!')
+    /*
     let message = 'Attempting to render an undefined node. \n'
     if (node === undefined) {
       message +=
@@ -15,6 +31,7 @@ async function generateBranch(siblings, node, depth, scope) {
       message += 'This error usually happens because of a missing import statement or a typo on a component tag'
     }
     throw new Error(message)
+    */
   }
 
   if (isFalse(node)) {
@@ -144,7 +161,7 @@ async function generateBranch(siblings, node, depth, scope) {
     const children = node.type(context)
     node.children = [].concat(children)
     for (let i = 0; i < node.children.length; i++) {
-      await generateBranch(siblings, node.children[i], `${depth}-${i}`, scope)
+      await generateBranch(siblings, node.children[i], `${depth}-${i}`, scope, node.attributes)
     }
     return
   }
