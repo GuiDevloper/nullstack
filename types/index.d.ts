@@ -98,7 +98,10 @@ export default class Nullstack<TProps = unknown> {
 
   terminated: boolean
 
-  render?(context: NullstackClientContext<TProps>): NullstackNode
+  render(context: NullstackClientContext<TProps>): NullstackNode
+
+  [_property: `render${Capitalize<string>}`]:
+    (context: NullstackClientContext<TProps>) => NullstackNode
 
   prerendered: boolean
 
