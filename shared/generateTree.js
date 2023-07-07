@@ -7,6 +7,12 @@ async function generateBranch(siblings, node, depth, scope, attributes) {
   transformNodes(scope, node, depth)
 
   if (isUndefined(node)) {
+    const isProd = !window.document
+    if (isProd) {
+      throw new Error(`
+ 🚨 An undefined node exist on your application!
+ 🚨 Access this route on development mode to get the location!`)
+    }
     const source = attributes?.__source
     if (source) {
       const { fileName, lineNumber, columnNumber } = source

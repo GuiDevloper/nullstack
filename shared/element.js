@@ -23,10 +23,9 @@ export default function element(type, props, ...children) {
   if (type === undefined) {
     const isProd = !window.document
     if (isProd) {
-      console.error(`
+      throw new Error(`
  🚨 An undefined node exist on your application!
- 🚨 Run it on development mode to get the location!`)
-      process.exit(1)
+ 🚨 Access this route on development mode to get the location!`)
     }
     const { fileName, lineNumber, columnNumber } = props.__source
     const msgError = `Undefined node at ${fileName}:${lineNumber}:${columnNumber}`
