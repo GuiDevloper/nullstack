@@ -6,7 +6,7 @@ function normalize(child) {
   return child ?? false
 }
 
-let errors = {}
+import runtimeError from './runtimeError'
 
 /**
  * 
@@ -21,28 +21,7 @@ let errors = {}
  */
 export default function element(type, props, ...children) {
   if (type === undefined) {
-    const isProd = !window.document
-    if (isProd) {
-      throw new Error(`
- 🚨 An undefined node exist on your application!
- 🚨 Access this route on development mode to get the location!`)
-    }
-    const { fileName, lineNumber, columnNumber } = props.__source
-    const msgError = `Undefined node at ${fileName}:${lineNumber}:${columnNumber}`
-    if (!errors[msgError]) {
-      errors[msgError] = 0
-    }
-    ++errors[msgError]
-    if (errors[msgError] > 2) {
-      console.error(msgError)
-    }
-    return {
-      type: 'p',
-      attributes: {
-        style: 'background:#171717; color:#f44336; padding:10px;',
-      },
-      children: msgError
-    }
+    return runtimeError.add(props.__source)
   }
   children = seed.concat(...children).map(normalize)
   if (type === 'textarea') {

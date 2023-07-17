@@ -3,41 +3,13 @@ import { isClass, isFalse, isFunction, isUndefined } from '../shared/nodes'
 import fragment from './fragment'
 import { transformNodes } from './plugins'
 
+import runtimeErrors from '../shared/runtimeError'
+
 async function generateBranch(siblings, node, depth, scope, attributes) {
   transformNodes(scope, node, depth)
 
   if (isUndefined(node)) {
-    const isProd = !window.document
-    if (isProd) {
-      throw new Error(`
- 🚨 An undefined node exist on your application!
- 🚨 Access this route on development mode to get the location!`)
-    }
-    const source = attributes?.__source
-    if (source) {
-      const { fileName, lineNumber, columnNumber } = source
-      const msgError = `Undefined node at ${fileName}:${lineNumber}:${columnNumber}`
-      console.error(msgError)
-      siblings.push({
-        type: 'p',
-        attributes: {
-          style: 'background:#171717; color:#f44336; padding:10px;',
-        },
-        children: [{ type: 'text', text: msgError }]
-      })
-      return
-    }
-    return console.warn('Your main component is trying to render an undefined node!')
-    /*
-    let message = 'Attempting to render an undefined node. \n'
-    if (node === undefined) {
-      message +=
-        'This error usually happens because of a missing return statement around JSX or returning undefined from a renderable function.'
-    } else {
-      message += 'This error usually happens because of a missing import statement or a typo on a component tag'
-    }
-    throw new Error(message)
-    */
+    return runtimeErrors.add(attributes?.__source)
   }
 
   if (isFalse(node)) {
@@ -204,6 +176,7 @@ async function generateBranch(siblings, node, depth, scope, attributes) {
 }
 
 export default async function generateTree(node, scope) {
+  runtimeErrors.clear()
   const tree = { type: 'div', attributes: { id: 'application' }, children: [] }
   await generateBranch(tree.children, node, '0', scope)
   return tree
