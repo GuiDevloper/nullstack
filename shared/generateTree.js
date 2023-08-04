@@ -3,41 +3,13 @@ import { isClass, isFalse, isFunction, isUndefined } from '../shared/nodes'
 import fragment from './fragment'
 import { transformNodes } from './plugins'
 
-async function generateBranch(siblings, node, depth, scope, attributes) {
+import runtimeErrors from '../shared/runtimeError'
+
+async function generateBranch(siblings, node, depth, scope, parentAttributes) {
   transformNodes(scope, node, depth)
 
   if (isUndefined(node)) {
-    const isProd = !window.document
-    if (isProd) {
-      throw new Error(`
- 🚨 An undefined node exist on your application!
- 🚨 Access this route on development mode to get the location!`)
-    }
-    const source = attributes?.__source
-    if (source) {
-      const { fileName, lineNumber, columnNumber } = source
-      const msgError = `Undefined node at ${fileName}:${lineNumber}:${columnNumber}`
-      console.error(msgError)
-      siblings.push({
-        type: 'p',
-        attributes: {
-          style: 'background:#171717; color:#f44336; padding:10px;',
-        },
-        children: [{ type: 'text', text: msgError }]
-      })
-      return
-    }
-    return console.warn('Your main component is trying to render an undefined node!')
-    /*
-    let message = 'Attempting to render an undefined node. \n'
-    if (node === undefined) {
-      message +=
-        'This error usually happens because of a missing return statement around JSX or returning undefined from a renderable function.'
-    } else {
-      message += 'This error usually happens because of a missing import statement or a typo on a component tag'
-    }
-    throw new Error(message)
-    */
+    return runtimeErrors.add(parentAttributes?.__source)
   }
 
   if (isFalse(node)) {
@@ -139,7 +111,7 @@ async function generateBranch(siblings, node, depth, scope, attributes) {
           scope.nextMeta[tagName][attribute] = []
         }
         if (Array.isArray(node.attributes[attribute])) {
-          for(const callback of node.attributes[attribute]) {
+          for (const callback of node.attributes[attribute]) {
             if (typeof callback === 'object') {
               scope.nextMeta[tagName][attribute].push(() => Object.assign(node.attributes.source, callback))
             } else {
