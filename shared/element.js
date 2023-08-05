@@ -1,4 +1,5 @@
 import fragment from './fragment'
+import runtimeError from './runtimeError'
 
 const seed = Object.freeze([])
 
@@ -6,10 +7,7 @@ function normalize(child) {
   return child ?? false
 }
 
-import runtimeError from './runtimeError'
-
 /**
- * 
  * @param {any} type Type of the node
  * @param {{__source: {
  *  fileName: string,
@@ -17,11 +15,10 @@ import runtimeError from './runtimeError'
  *  columnNumber: number,
  * }}} props 
  * @param  {...any} children 
- * @returns 
  */
 export default function element(type, props, ...children) {
   if (type === undefined) {
-    return runtimeError.add(props.__source)
+    return runtimeError.add(props?.__source)
   }
   children = seed.concat(...children).map(normalize)
   if (type === 'textarea') {
