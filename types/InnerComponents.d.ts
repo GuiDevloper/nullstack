@@ -17,9 +17,9 @@ type ComponentProps<Params extends Record<string, any>> = {
 type GetMethod<Class extends Record<string, any>, MethodName> =
   MethodName extends string
   ? NullstackFunctionalComponent<
-      Parameters<Class[MethodName]>[0] extends Record<string, any>
-      ? ComponentProps<Parameters<Class[MethodName]>[0]>
-      : Record<string, any>
+      Parameters<Class[MethodName]>[0] extends undefined
+      ? Record<string, any>
+      : ComponentProps<Parameters<Class[MethodName]>[0]>
     >
   : never
 
