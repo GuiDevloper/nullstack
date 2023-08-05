@@ -5,11 +5,11 @@ import { transformNodes } from './plugins'
 
 import runtimeErrors from '../shared/runtimeError'
 
-async function generateBranch(siblings, node, depth, scope, attributes) {
+async function generateBranch(siblings, node, depth, scope, parentAttributes) {
   transformNodes(scope, node, depth)
 
   if (isUndefined(node)) {
-    return runtimeErrors.add(attributes?.__source)
+    return runtimeErrors.add(parentAttributes?.__source)
   }
 
   if (isFalse(node)) {
@@ -111,7 +111,7 @@ async function generateBranch(siblings, node, depth, scope, attributes) {
           scope.nextMeta[tagName][attribute] = []
         }
         if (Array.isArray(node.attributes[attribute])) {
-          for(const callback of node.attributes[attribute]) {
+          for (const callback of node.attributes[attribute]) {
             if (typeof callback === 'object') {
               scope.nextMeta[tagName][attribute].push(() => Object.assign(node.attributes.source, callback))
             } else {

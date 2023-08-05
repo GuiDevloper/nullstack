@@ -72,8 +72,6 @@ function createOverlay() {
   let overlayElement
   /** @type {HTMLDivElement | null | undefined} */
   let containerElement
-  /** @type {HTMLDivElement | null | undefined} */
-  let headerElement
 
   /**
    *
@@ -102,7 +100,7 @@ function createOverlay() {
     const contentElement = createEl('div', containerStyle, {
       id: 'nullstack-dev-server-client-overlay-div'
     })
-    headerElement = createEl('div', headerStyle, {
+    const headerElement = createEl('div', headerStyle, {
       innerText: 'Runtime errors:'
     })
     const closeButtonElement = createEl('button', dismissButtonStyle, {
@@ -229,7 +227,7 @@ function throwUndefinedProd() {
 }
 
 function throwUndefinedMain() {
-  console.warn('Your main component is trying to render an undefined node!')
+  throw new Error('Your main component is trying to render an undefined node!')
 }
 
 module.exports = {
