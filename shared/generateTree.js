@@ -9,7 +9,7 @@ async function generateBranch(siblings, node, depth, scope, parentAttributes) {
   transformNodes(scope, node, depth)
 
   if (isUndefined(node)) {
-    return runtimeErrors.add(parentAttributes?.__source)
+    return runtimeErrors.add(parentAttributes?.__source, { node })
   }
 
   if (isFalse(node)) {

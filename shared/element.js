@@ -18,7 +18,7 @@ function normalize(child) {
  */
 export default function element(type, props, ...children) {
   if (type === undefined) {
-    return runtimeError.add(props?.__source)
+    runtimeError.add(props?.__source, { disableProductionThrow: true })
   }
   children = seed.concat(...children).map(normalize)
   if (type === 'textarea') {

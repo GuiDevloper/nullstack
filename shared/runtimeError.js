@@ -181,14 +181,13 @@ let storedErrors = []
 let initialRenders = 0
 
 /**
- * 
  * @param {{ fileName: string, lineNumber: string, columnNumber: string }} source 
- * @returns undefined
+ * @param {{ disableProductionThrow: boolean, node: object }} options
  */
-async function add(source) {
+async function add(source, options) {
   ++initialRenders
-  if (!isClient()) return throwUndefinedProd()
-  if (!source) return throwUndefinedMain()
+  if (!isClient()) return throwUndefinedProd(options)
+  if (!source) return throwUndefinedMain(options)
 
   const { fileName: moduleIdentifier, lineNumber, columnNumber } = source
   const loc = `${lineNumber}:${columnNumber}`
@@ -220,13 +219,21 @@ function initialized() {
   return initialRenders > 2
 }
 
-function throwUndefinedProd() {
+/**
+ * @param {{ disableProductionThrow: boolean }} options
+ */
+function throwUndefinedProd(options) {
+  if (options.disableProductionThrow) return
   throw new Error(`
  🚨 An undefined node exist on your application!
  🚨 Access this route on development mode to get the location!`)
 }
 
-function throwUndefinedMain() {
+/**
+ * @param {{ node: object | undefined }} options
+ */
+function throwUndefinedMain(options) {
+  if (options.node !== undefined) return
   throw new Error('Your main component is trying to render an undefined node!')
 }
 
