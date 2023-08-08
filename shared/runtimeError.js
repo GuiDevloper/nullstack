@@ -54,16 +54,18 @@ const msgTextStyle = {
 }
 
 /**
- * @param {string} type
- * @param {string  | { file?: string, moduleIdentifier?: string, relativePath?: string, loc?: string, message?: string }} item
- * @returns {{ header: string, body: string }}
+ * @param {{ source: { fileName: string, lineNumber: string, columnNumber: string }, filenameWithLOC: string }} item
+ * @returns {Promise<{ header: string, body: string}>}
  */
-function formatProblem(item) {
+async function formatProblem(item) {
+  const { file, relativePath } = await getFile(item.source)
+  const message = `Undefined node at:\n${file}`
   const linkStyle = 'all:unset;margin-left:.3em;color:#F48FB1;font-size:14px;'
   const openEditor = `<a style="${linkStyle}">Open in Editor ></a>`
+  const { lineNumber, columnNumber } = item.source
   return {
-    header: `${item.relativePath}:${item.loc} ${openEditor}`,
-    body: item.message || ''
+    header: `${relativePath}:${lineNumber}:${columnNumber} ${openEditor}`,
+    body: message || ''
   }
 }
 
@@ -111,7 +113,6 @@ function createOverlay() {
     containerElement = createEl('div')
     contentElement.append(headerElement, closeButtonElement, containerElement)
 
-    /** @type {HTMLIFrameElement} */
     overlayElement.appendChild(contentElement)
     onLoad(containerElement)
     document.body.appendChild(overlayElement)
@@ -148,19 +149,19 @@ function createOverlay() {
 
   // Compilation with errors (e.g. syntax error or missing modules).
   /**
-   * @param {Array<string  | { moduleIdentifier?: string, loc?: string, message?: string }>} messages
+   * @param {{ source: object, filenameWithLOC: string }} messageData
    */
-  function show(message) {
+  async function show(messageData) {
+    const { header, body } = await formatProblem(messageData)
     ensureOverlayExists(function () {
-      const { header, body } = formatProblem(message)
       const typeElement = createEl('div', msgTypeStyle, {
         innerHTML: header
       })
       typeElement.addEventListener('click', function () {
-        const fileName = `${message.moduleIdentifier}:${message.loc}`
-        fetch(
-          `/nullstack-dev-server/open-editor?fileName=${fileName}`
-        )
+        const query = new URLSearchParams({
+          fileName: messageData.filenameWithLOC
+        })
+        fetch(`/nullstack-dev-server/open-editor?${query}`)
       })
 
       const entryElement = createEl('div', msgStyles)
@@ -169,7 +170,6 @@ function createOverlay() {
       })
       entryElement.append(typeElement, messageTextNode)
 
-      /** @type {HTMLDivElement} */
       containerElement.appendChild(entryElement)
     })
   }
@@ -189,26 +189,22 @@ async function add(source, options) {
   if (!isClient()) return throwUndefinedProd(options)
   if (!source) return throwUndefinedMain(options)
 
-  const { fileName: moduleIdentifier, lineNumber, columnNumber } = source
-  const loc = `${lineNumber}:${columnNumber}`
-  const errorTitle = `${moduleIdentifier}:${loc}`
-  if (storedErrors.includes(errorTitle)) return
-  storedErrors.push(errorTitle)
-  const { file, relativePath } = await getFile(moduleIdentifier, loc)
-  overlay.show({
-    message: `Undefined node at:\n${file}`,
-    moduleIdentifier,
-    relativePath,
-    loc
+  const { fileName, lineNumber, columnNumber } = source
+  const filenameWithLOC = `${fileName}:${lineNumber}:${columnNumber}`
+  if (storedErrors.includes(filenameWithLOC)) return
+  storedErrors.push(filenameWithLOC)
+  await overlay.show({
+    source,
+    filenameWithLOC
   })
 }
 
-async function getFile(moduleIdentifier, loc) {
-  return (
-    await fetch(
-      `/nullstack-dev-server/get-file?fileName=${moduleIdentifier}&loc=${loc}`
-    )
-  ).json()
+/**
+ * @param {{ fileName: string, lineNumber: string, columnNumber: string }} source 
+ */
+async function getFile(source) {
+  const query = new URLSearchParams(source)
+  return (await fetch(`/nullstack-dev-server/get-file?${query}`)).json()
 }
 
 function isClient() {

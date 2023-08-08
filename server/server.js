@@ -1,7 +1,6 @@
 import bodyParser from 'body-parser'
 import express from 'express'
 import path from 'path'
-import fs from 'fs'
 import deserialize from '../shared/deserialize'
 import prefix from '../shared/prefix'
 import context, { getCurrentContext, generateCurrentContext } from './context'
@@ -18,6 +17,7 @@ import generateRobots from './robots'
 import template from './template'
 import { generateServiceWorker } from './worker'
 import { load } from './lazy'
+import addDevRoutes from './devRoutes'
 
 const server = express()
 
@@ -103,46 +103,7 @@ server.start = function () {
       response.send(generateFile(`${request.params.number}.client.css.map`, server))
     })
 
-    /** @type {import("express").Application} */
-    server.get("/nullstack-dev-server/open-editor", (req, res) => {
-      const fileName = req.query.fileName;
-
-      if (typeof fileName === "string") {
-        const launchEditor = require("launch-editor");
-        launchEditor(fileName, process.env.NULLSTACK_EDITOR || 'code');
-      }
-
-      res.end();
-    });
-
-    /** @type {import("express").Application} */
-    server.get("/nullstack-dev-server/get-file", (req, res) => {
-      const fileName = req.query.fileName;
-      const [line, col] = req.query.loc.split(':').map(n => +n)
-      let relativePath = ''
-      let file = ''
-      try {
-        relativePath = path
-          .relative(process.cwd(), fileName)
-          .split(path.sep)
-          .join('/')
-        file = fs.readFileSync(fileName, 'utf8')
-        const lines = file.split('\n')
-          .map((l, idx) => {
-            const current = idx + 1
-            const startLine = `${current === line ? '>' : ' '} ${current}`
-            return `${startLine} | ${l}`
-          })
-        lines.splice(line, 0,
-          `${'|'.padStart(line.toString().length + 4, ' ')}${
-            '^'.padStart(col + 1, ' ')
-          }`
-        )
-        file = lines.slice(line - 3, line + 3).join('\n')
-      } catch {}
-
-      res.send({ file, relativePath });
-    });
+    addDevRoutes(server)
   }
 
   server.get(`/manifest.webmanifest`, (request, response) => {
