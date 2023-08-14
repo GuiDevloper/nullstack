@@ -1,4 +1,4 @@
-import Nullstack, {
+import {
   NullstackFunctionalComponent,
   NullstackClientContext
 } from './index'
@@ -8,18 +8,17 @@ type RemoveContext<Params extends Record<string, any>, Prop> =
   ? Prop extends keyof NullstackClientContext
     ? (Params[Prop] extends NullstackClientContext[Prop] ? never : Prop)
     : Prop
-  : 'never'
+  : never
 
-type ComponentProps<Params extends Record<string, any>> = {
-  [Prop in keyof Params as RemoveContext<Params, Prop>]: Params[Prop]
-}
+type ComponentProps<Params> =
+  Params extends Record<string, any>
+  ? { [Prop in keyof Params as RemoveContext<Params, Prop>]: Params[Prop] }
+  : (Params extends undefined ? Record<string, any> : never)
 
 type GetMethod<Class extends Record<string, any>, MethodName> =
   MethodName extends string
   ? NullstackFunctionalComponent<
-      Parameters<Class[MethodName]>[0] extends undefined
-      ? Record<string, any>
-      : ComponentProps<Parameters<Class[MethodName]>[0]>
+      ComponentProps<Parameters<Class[MethodName]>[0]>
     >
   : never
 
@@ -27,7 +26,7 @@ type GetName<Class extends Record<string, any>, Property> =
   Property extends `render` ? never :
   Property extends `render${infer Name}`
   ? Property extends `render${Capitalize<Name>}`
-    ? (Class[Property] extends Nullstack['render'] ? Name : never)
+    ? (Class[Property] extends NullstackFunctionalComponent<any> ? Name : never)
     : never
   : never
 
