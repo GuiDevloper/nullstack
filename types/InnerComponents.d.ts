@@ -11,9 +11,11 @@ type RemoveContext<Params extends Record<string, any>, Prop> =
   : never
 
 type ComponentProps<Params> =
-  Params extends Record<string, any>
-  ? { [Prop in keyof Params as RemoveContext<Params, Prop>]: Params[Prop] }
-  : (Params extends undefined ? Record<string, any> : never)
+  Params extends undefined
+  ? Record<string, any>
+  : Params extends Record<string, any>
+    ? { [Prop in keyof Params as RemoveContext<Params, Prop>]: Params[Prop] }
+    : never
 
 type GetMethod<Class extends Record<string, any>, MethodName> =
   MethodName extends string
