@@ -18,5 +18,5 @@ export function isFunction(node) {
 }
 
 export function isText(node) {
-  return node.type === 'text'
+  return node.type === 'text' && node.attributes === undefined
 }

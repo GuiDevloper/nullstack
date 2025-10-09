@@ -100,7 +100,7 @@ function updateHeadChildren(currentChildren, nextChildren) {
   }
 }
 
-function _rerender(current, next) {
+function _rerender(current, next, isParentSvg = false) {
   const selector = current.element
   next.element = current.element
 
@@ -108,8 +108,10 @@ function _rerender(current, next) {
     return
   }
 
+  const isSvg = isParentSvg || next.type === 'svg'
+
   if (current.type !== next.type) {
-    const nextSelector = render(next)
+    const nextSelector = render(next, isSvg)
     selector.replaceWith(nextSelector)
     return
   }
@@ -132,22 +134,22 @@ function _rerender(current, next) {
     const limit = Math.max(current.children.length, next.children.length)
     if (next.children.length > current.children.length) {
       for (let i = 0; i < current.children.length; i++) {
-        _rerender(current.children[i], next.children[i])
+        _rerender(current.children[i], next.children[i], isSvg)
       }
       for (let i = current.children.length; i < next.children.length; i++) {
-        const nextSelector = render(next.children[i])
+        const nextSelector = render(next.children[i], isSvg)
         selector.appendChild(nextSelector)
       }
     } else if (current.children.length > next.children.length) {
       for (let i = 0; i < next.children.length; i++) {
-        _rerender(current.children[i], next.children[i])
+        _rerender(current.children[i], next.children[i], isSvg)
       }
       for (let i = current.children.length - 1; i >= next.children.length; i--) {
         selector.childNodes[i].remove()
       }
     } else {
       for (let i = limit - 1; i > -1; i--) {
-        _rerender(current.children[i], next.children[i])
+        _rerender(current.children[i], next.children[i], isSvg)
       }
     }
   }

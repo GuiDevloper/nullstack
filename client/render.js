@@ -5,7 +5,7 @@ import { anchorableElement } from './anchorableNode'
 import { generateCallback, generateSubject } from './events'
 import { ref } from './ref'
 
-export default function render(node, options) {
+export default function render(node, isSvg = false) {
   if (isFalse(node) || node.type === 'head') {
     node.element = document.createComment('')
     return node.element
@@ -16,9 +16,8 @@ export default function render(node, options) {
     return node.element
   }
 
-  const svg = (options && options.svg) || node.type === 'svg'
-
-  if (svg) {
+  isSvg = isSvg || node.type === 'svg'
+  if (isSvg) {
     node.element = document.createElementNS('http://www.w3.org/2000/svg', node.type)
   } else {
     node.element = document.createElement(node.type)
@@ -58,7 +57,7 @@ export default function render(node, options) {
 
   if (!node.attributes.html) {
     for (let i = 0; i < node.children.length; i++) {
-      const child = render(node.children[i], { svg })
+      const child = render(node.children[i], isSvg)
       node.element.appendChild(child)
     }
 

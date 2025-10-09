@@ -63,6 +63,7 @@ import LazyComponentLoader from './LazyComponentLoader'
 import NestedFolder from './nested/NestedFolder'
 import ChildComponentWithoutServerFunctions from './ChildComponentWithoutServerFunctions'
 import ObjectEventScope from './ObjectEventScope'
+import SvgSupport from './SvgSupport.njs'
 import './Application.css'
 
 class Application extends Nullstack {
@@ -156,6 +157,7 @@ class Application extends Nullstack {
         <LazyComponent route="/lazy-importer" prop="works" />
         <ChildComponentWithoutServerFunctions route="/child-component-without-server-functions" />
         <ObjectEventScope route="/object-event-scope" />
+        <SvgSupport route="/svg-support" />
         <ErrorPage route="*" />
       </body>
     )
