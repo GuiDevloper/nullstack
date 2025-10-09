@@ -1,4 +1,4 @@
-import { isFalse } from '../shared/nodes'
+import { isFalse, isText } from '../shared/nodes'
 import { sanitizeHtml } from '../shared/sanitizeString'
 import renderAttributes from './renderAttributes'
 
@@ -25,7 +25,7 @@ function renderBody(node, scope, next) {
   if (isFalse(node)) {
     return '<!---->'
   }
-  if (node.type === 'text') {
+  if (isText(node)) {
     const text = node.text === '' ? ' ' : sanitizeHtml(node.text.toString())
     return next && next.type === 'text' ? `${text}<!--#-->` : text
   }

@@ -26,7 +26,7 @@ class SvgSupport extends Nullstack {
   
   render() {
     return (
-      <div>
+      <div data-hydrated={this.hydrated}>
         <svg viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
           <text x="20" y="35" class="small">I</text>
           <text x="40" y="35" class="heavy">love</text>
