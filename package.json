@@ -1,6 +1,6 @@
 {
   "name": "nullstack",
-  "version": "0.20.3",
+  "version": "0.20.4",
   "description": "Feature-Driven Full Stack JavaScript Components",
   "main": "./types/index.d.ts",
   "author": "Mortaro",
