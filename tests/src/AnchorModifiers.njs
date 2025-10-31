@@ -59,4 +59,4 @@ class AnchorModifiers extends Nullstack {
 
 }
 
-export default AnchorModifiers;
+export default AnchorModifiers
